@@ -20,8 +20,8 @@ SoccerBook
   <b-collapse is-nav id="nav_collapse">
 
     <b-navbar-nav right>
-      <b-nav-item href="#" disabled>List</b-nav-item>
-      <b-nav-item href="#">Add player</b-nav-item>
+      <b-nav-item href="#"  v-on:click="gotoplayerlist"  v-bind:disabled="playerListVisible" >List</b-nav-item>
+      <b-nav-item href="#" v-on:click="gotoaddplayer"    v-bind:disabled="addPlayerVisible">Add player</b-nav-item>
     </b-navbar-nav>
 
     <!-- Right aligned nav items -->
@@ -45,7 +45,7 @@ SoccerBook
 
   </b-collapse>
 </b-navbar>
-<div>
+<div id="playerList" v-if="playerListVisible">
     <b-card-group deck>
         <b-card title="Title"
                 img-src="https://lorempixel.com/300/300/"
@@ -87,14 +87,28 @@ SoccerBook
         </b-card>
     </b-card-group>
     </div>
+	<div id="addPlayer" v-if="addPlayerVisible">
+		add player here
+	</div>
 </div>
-
 <script type="text/javascript">
 
 var app = new Vue({
 	  el: '#app',
 	  data: {
-	    message: 'Hello Vue!'
+	    message: 'Hello Vue!',
+	    playerListVisible : true,
+	    addPlayerVisible : false
+	  },
+	  methods: {
+		  gotoaddplayer: function () {
+		      this.playerListVisible = false
+		      this.addPlayerVisible = true
+		  },
+		  gotoplayerlist: function () {
+		      this.playerListVisible = true
+		      this.addPlayerVisible = false
+		  }
 	  }
 	})
 

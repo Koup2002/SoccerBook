@@ -1,12 +1,104 @@
 <html>
 <head>
 <title>
-hallo Welt
+SoccerBook
 </title>
-
+<link type="text/css" rel="stylesheet" href="https://unpkg.com/bootstrap/dist/css/bootstrap.min.css"/>
+<link type="text/css" rel="stylesheet" href="https://unpkg.com/bootstrap-vue@latest/dist/bootstrap-vue.css"/>
+<script src="https://cdn.jsdelivr.net/npm/vue/dist/vue.js"></script>
+<script src="https://unpkg.com/babel-polyfill@latest/dist/polyfill.min.js"></script>
+<script src="https://unpkg.com/bootstrap-vue@latest/dist/bootstrap-vue.js"></script>
 </head>
 <body>
-Mein <b>erste</b> webseite
+<div id="app">
+ <b-navbar toggleable="md" type="dark" variant="info">
 
+  <b-navbar-toggle target="nav_collapse"></b-navbar-toggle>
+
+  <b-navbar-brand href="#">SoccerBook</b-navbar-brand>
+
+  <b-collapse is-nav id="nav_collapse">
+
+    <b-navbar-nav right>
+      <b-nav-item href="#" disabled>List</b-nav-item>
+      <b-nav-item href="#">Add player</b-nav-item>
+    </b-navbar-nav>
+
+    <!-- Right aligned nav items -->
+    <b-navbar-nav class="ml-auto">
+
+        <!-- 
+      <b-nav-form>
+        <b-form-input size="sm" class="mr-sm-2" type="text" placeholder="Search"/>
+        <b-button size="sm" class="my-2 my-sm-0" type="submit">Search</b-button>
+      </b-nav-form>
+
+      <b-nav-item-dropdown text="Sort by" right>
+        <b-dropdown-item href="#">Last name</b-dropdown-item>
+        <b-dropdown-item href="#">Nationality</b-dropdown-item>
+        <b-dropdown-item href="#">Rating</b-dropdown-item>
+      </b-nav-item-dropdown>
+ -->
+
+    
+    </b-navbar-nav>
+
+  </b-collapse>
+</b-navbar>
+<div>
+    <b-card-group deck>
+        <b-card title="Title"
+                img-src="https://lorempixel.com/300/300/"
+                img-alt="Img"
+                img-top>
+            <p class="card-text">
+                This is a wider card with supporting text below as a
+                natural lead-in to additional content. This content
+                is a little bit longer.
+            </p>
+            <div slot="footer">
+                <small class="text-muted">Last updated 3 mins ago</small>
+            </div>
+        </b-card>
+        <b-card title="Title"
+                img-src="https://lorempixel.com/300/300/"
+                img-alt="Img"
+                img-top>
+            <p class="card-text">
+                This card has supporting text below as a natural lead-in
+                to additional content.
+            </p>
+            <div slot="footer">
+                <small class="text-muted">Last updated 3 mins ago</small>
+            </div>
+        </b-card>
+        <b-card title="Title"
+                img-src="https://lorempixel.com/300/300/"
+                img-alt="Img"
+                img-top>
+            <p class="card-text">
+                This is a wider card with supporting text below as a natural
+                lead-in to additional content. This card has even longer content
+                than the first to show that equal height action.
+            </p>
+            <div slot="footer">
+                <small class="text-muted">Last updated 3 mins ago</small>
+            </div>
+        </b-card>
+    </b-card-group>
+    </div>
+</div>
+
+<script type="text/javascript">
+
+var app = new Vue({
+	  el: '#app',
+	  data: {
+	    message: 'Hello Vue!'
+	  }
+	})
+
+
+</script>
 </body>
 </html>

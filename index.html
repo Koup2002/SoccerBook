@@ -57,7 +57,7 @@ SoccerBook
                 img-alt="Img"
                 img-top>
             <p class="card-text">
-                <star-rating @rating-selected="player.rating = $event" :rating="player.rating" :star-size="25" :read-only="true" :show-rating="false"></star-rating>
+                <star-rating @rating-selected="player.rating = $event" :rating="parseInt(player.rating)" :star-size="25" :read-only="true" :show-rating="false"></star-rating>
                 <br/>
                 <b-button variant="primary" @click="editPlayer(player.id)">Edit</b-button>
             </p>

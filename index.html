@@ -22,7 +22,7 @@ SoccerBook
 
     <b-navbar-nav right>
       <b-nav-item href="#"  v-on:click="gotoplayerlist"  v-bind:disabled="playerListVisible" >List</b-nav-item>
-      <b-nav-item href="#" v-on:click="gotoaddplayer"    v-bind:disabled="addPlayerVisible">Add player</b-nav-item>
+      <b-nav-item href="#" v-on:click="addPlayer"    v-bind:disabled="addPlayerVisible">Add player</b-nav-item>
     </b-navbar-nav>
 
     <!-- Right aligned nav items -->
@@ -57,7 +57,8 @@ SoccerBook
                 img-top>
             <p class="card-text">
                 <star-rating @rating-selected="player.rating = $event" :rating="player.rating" :star-size="25" :read-only="true" :show-rating="false"></star-rating>
-                
+                <br/>
+                <b-button variant="primary" @click="editPlayer(player.id)">Edit</b-button>
             </p>
             <div slot="footer">
                 <b-img width="30" height="20" v-bind:src="`https://www.ft.com/__origami/service/image/v2/images/raw/ftflag-v1:${player.nationality}?source=origami-registry&width=200`" alt="flag" />
@@ -66,15 +67,47 @@ SoccerBook
     </b-card-group>
     </div>
 	<div id="addPlayer" v-if="addPlayerVisible">
-		add player here
+				  <b-form >
+				      <b-form-group
+				                    label="First Name:"
+				                    label-for="firstname">
+				        <b-form-input id="firstname" type="text" v-model="currentPlayer.firstname"></b-form-input>
+				      </b-form-group>
+				      <b-form-group
+				                    label="Last Name:"
+				                    label-for="lastname">
+				        <b-form-input id="lastname" type="text" v-model="currentPlayer.lastname"></b-form-input>
+				      </b-form-group>
+				      <b-form-group
+				                    label="Picture:"
+				                    label-for="picUrl">
+				        <b-form-input id="picUrl" type="url" v-model="currentPlayer.picUrl"></b-form-input>
+				      </b-form-group>
+				      <b-form-group
+				                    label="Nationality:"
+				                    label-for="nationality">
+				        <b-form-input id="nationality" type="text" v-model="currentPlayer.nationality"></b-form-input>
+				      </b-form-group>
+				      <b-form-group
+				                    label="Rating:"
+				                    label-for="rating">
+				        <b-form-input id="rating" type="number" v-model="currentPlayer.rating"></b-form-input>
+				      </b-form-group>
+				      <b-button  variant="danger" @click="onDelete" v-if="!currentPlayerisNew">Delete</b-button>
+				      <b-button  variant="danger" @click="onReset">Cancel</b-button>
+				      <b-button  variant="primary" @click="onSubmit">Submit</b-button>
+				    </b-form>
 	</div>
 </div>
 <script type="text/javascript">
 
 function loadPlayers(){
+	var ret = JSON.parse(localStorage.getItem("playerlist"))
+	if(ret != null) return ret;
+	var i = 1;
 	return [
 		{
-			id : new Date().getTime(),
+			id : i++,
 			lastname : "Buffon",
 			firstname : "Paul",
 			picUrl : "https://cdn.24.co.za/files/Cms/General/d/7266/8e89a15d88ae41bd8ccaf79fbc5188b1.jpg",
@@ -82,7 +115,7 @@ function loadPlayers(){
 			rating : 2,
 		},
 		{
-			id : new Date().getTime(),
+			id : i++,
 			lastname : "Neuer",
 			firstname : "Manuel",
 			picUrl : "https://www.welt.de/img/sport/fussball/bundesliga/fc-bayern-muenchen/mobile176038108/3252504107-ci102l-w1024/Manuel-Neuer.jpg",
@@ -90,7 +123,7 @@ function loadPlayers(){
 			rating : 4,
 		},
 		{
-			id : new Date().getTime(),
+			id : i++,
 			lastname : "Özil",
 			firstname : "Mesut",
 			picUrl : "https://platform-static-files.s3.amazonaws.com/premierleague/photos/players/250x250/p37605.png",
@@ -100,17 +133,72 @@ function loadPlayers(){
 		
 	]
 }
+function createPlayer(){
+	return[
+		{
+			id : new Date().getTime(),
+			lastname:"",
+			firstname : "",
+			picUrl : "",
+			nationality : "",
+			rating : 0
+		}][0]
+}
 
+function findPlayerWithId(playerId){
+	for (i = 0; i < app.playerlist.length; i++) { 
+	    if(app.playerlist[i].id == playerId) return app.playerlist[i]
+	}
+	return null
+}
+function getPlayerIndex(playerId){
+	for (i = 0; i < app.playerlist.length; i++) { 
+	    if(app.playerlist[i].id == playerId) return i
+	}
+	return -1
+}
+function playerWithIdExists(playerId){
+	return findPlayerWithId(playerId) != null
+}
+
+function removePlayerWithId(playerId){
+	app.playerlist.splice(getPlayerIndex(playerId),1)
+}
 var app = new Vue({
 	  el: '#app',
 	  data: {
-		playerlist : loadPlayers(),  
+		playerlist : loadPlayers(), 
+		currentPlayer : createPlayer(),
+		currentPlayerisNew : true, 
 	    message: 'Hello Vue!',
 	    playerListVisible : true,
 	    addPlayerVisible : false
 	  },
 	  methods: {
-		  gotoaddplayer: function () {
+		  editPlayer: function (playerId) {
+			  this.currentPlayer = findPlayerWithId(playerId)
+			  this.currentPlayerisNew = false
+			  this.gotoeditplayer()
+		  },
+		  addPlayer: function (playerId) {
+			  this.currentPlayer = createPlayer()
+			  this.currentPlayerisNew = true
+			  this.gotoeditplayer()
+		  },
+		  onSubmit: function () {
+			  if(!playerWithIdExists(this.currentPlayer.id)) {
+			  	this.playerlist.push(this.currentPlayer)  
+			  }
+			  this.gotoplayerlist()
+		  },
+		  onReset: function () {
+			     this.gotoplayerlist()
+			 },
+		  onDelete: function (playerId) {
+			  	 removePlayerWithId(this.currentPlayer.id)
+			     this.gotoplayerlist()
+			},
+		  gotoeditplayer: function () {
 		      this.playerListVisible = false
 		      this.addPlayerVisible = true
 		  },
@@ -124,7 +212,9 @@ var app = new Vue({
 		  }
 	})
 
-
+window.onunload  = function(){
+	localStorage.setItem("playerlist",JSON.stringify(app.playerlist));
+	};
 </script>
 </body>
 </html>

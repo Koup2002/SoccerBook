@@ -8,6 +8,7 @@ SoccerBook
 <script src="https://cdn.jsdelivr.net/npm/vue/dist/vue.js"></script>
 <script src="https://unpkg.com/babel-polyfill@latest/dist/polyfill.min.js"></script>
 <script src="https://unpkg.com/bootstrap-vue@latest/dist/bootstrap-vue.js"></script>
+<script src="https://unpkg.com/vue-star-rating/dist/star-rating.min.js"></script>
 </head>
 <body>
 <div id="app">
@@ -47,42 +48,19 @@ SoccerBook
 </b-navbar>
 <div id="playerList" v-if="playerListVisible">
     <b-card-group deck>
-        <b-card title="Title"
-                img-src="https://lorempixel.com/300/300/"
+        <b-card 
+        :title="player.firstname +' '+player.lastname" 
+        v-for="player in playerlist" :key="player.id"
+      
+                v-bind:img-src="player.picUrl"
                 img-alt="Img"
                 img-top>
             <p class="card-text">
-                This is a wider card with supporting text below as a
-                natural lead-in to additional content. This content
-                is a little bit longer.
+                <star-rating @rating-selected="player.rating = $event" :rating="player.rating" :star-size="25" :read-only="true" :show-rating="false"></star-rating>
+                
             </p>
             <div slot="footer">
-                <small class="text-muted">Last updated 3 mins ago</small>
-            </div>
-        </b-card>
-        <b-card title="Title"
-                img-src="https://lorempixel.com/300/300/"
-                img-alt="Img"
-                img-top>
-            <p class="card-text">
-                This card has supporting text below as a natural lead-in
-                to additional content.
-            </p>
-            <div slot="footer">
-                <small class="text-muted">Last updated 3 mins ago</small>
-            </div>
-        </b-card>
-        <b-card title="Title"
-                img-src="https://lorempixel.com/300/300/"
-                img-alt="Img"
-                img-top>
-            <p class="card-text">
-                This is a wider card with supporting text below as a natural
-                lead-in to additional content. This card has even longer content
-                than the first to show that equal height action.
-            </p>
-            <div slot="footer">
-                <small class="text-muted">Last updated 3 mins ago</small>
+                <b-img width="30" height="20" v-bind:src="`https://www.ft.com/__origami/service/image/v2/images/raw/ftflag-v1:${player.nationality}?source=origami-registry&width=200`" alt="flag" />
             </div>
         </b-card>
     </b-card-group>
@@ -93,9 +71,40 @@ SoccerBook
 </div>
 <script type="text/javascript">
 
+function loadPlayers(){
+	return [
+		{
+			id : new Date().getTime(),
+			lastname : "Buffon",
+			firstname : "Paul",
+			picUrl : "https://cdn.24.co.za/files/Cms/General/d/7266/8e89a15d88ae41bd8ccaf79fbc5188b1.jpg",
+			nationality : "IT",
+			rating : 2,
+		},
+		{
+			id : new Date().getTime(),
+			lastname : "Neuer",
+			firstname : "Manuel",
+			picUrl : "https://www.welt.de/img/sport/fussball/bundesliga/fc-bayern-muenchen/mobile176038108/3252504107-ci102l-w1024/Manuel-Neuer.jpg",
+			nationality : "DE",
+			rating : 4,
+		},
+		{
+			id : new Date().getTime(),
+			lastname : "Özil",
+			firstname : "Mesut",
+			picUrl : "https://platform-static-files.s3.amazonaws.com/premierleague/photos/players/250x250/p37605.png",
+			nationality : "DE",
+			rating : 3,
+		}
+		
+	]
+}
+
 var app = new Vue({
 	  el: '#app',
 	  data: {
+		playerlist : loadPlayers(),  
 	    message: 'Hello Vue!',
 	    playerListVisible : true,
 	    addPlayerVisible : false
@@ -109,7 +118,10 @@ var app = new Vue({
 		      this.playerListVisible = true
 		      this.addPlayerVisible = false
 		  }
-	  }
+	  },
+	  components:{
+		    'star-rating': VueStarRating.default
+		  }
 	})
 
 
